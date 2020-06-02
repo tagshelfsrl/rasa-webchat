@@ -1,6 +1,7 @@
 
 
 const path = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = [{
@@ -37,7 +38,11 @@ module.exports = [{
         ]
       },
       {
-        test: /\.(jpg|png|gif|svg)$/,
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(jpg|png|gif|svg|woff|ttf|eot)$/,
         use: {
           loader: 'url-loader'
         }
@@ -94,7 +99,11 @@ module.exports = [{
         ]
       },
       {
-        test: /\.(jpg|png|gif|svg)$/,
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(jpg|png|gif|svg|woff|ttf|eot)$/,
         use: {
           loader: 'url-loader'
         }

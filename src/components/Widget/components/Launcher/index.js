@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Map } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import { MESSAGES_TYPES } from 'constants';
 import { Image, Message, Buttons } from 'messagesComponents';
 import { showTooltip as showTooltipAction } from 'actions';
@@ -24,9 +28,20 @@ const Launcher = ({
   unreadCount,
   displayUnreadCount,
   showTooltip,
-  lastMessage,
+  lastMessages,
   closeTooltip
 }) => {
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    adaptiveHeight: true
+  };
+  const lastMessage = lastMessages ? lastMessages.slice(-1)[0] : new Map();
+  // This is used to distinguish bw drag and click events in the tooltips sequences.
+  const dragStatus = useRef({
+    x: 0,
+    y: 0
+  });
   const className = ['rw-launcher'];
   if (isChatOpen) className.push('rw-hide-sm');
   if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
@@ -53,7 +68,8 @@ const Launcher = ({
 
 
   const renderToolTip = () => (
-    <div className="rw-tooltip-body">
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div className="rw-tooltip-body" onClick={(e) => { e.stopPropagation(); }}>
       <div className="rw-tooltip-close" >
         <button onClick={(e) => { e.stopPropagation(); closeTooltip(); }}>
           <img
@@ -62,8 +78,30 @@ const Launcher = ({
           />
         </button>
       </div>
-      <div className="rw-tooltip-response">
-        {getComponentToRender(lastMessage)}
+      <div className="rw-slider-safe-zone">
+        <Slider {...sliderSettings}>
+          {lastMessages.map(message => (
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+            <div
+              className="rw-tooltip-response"
+              onMouseDown={(event) => {
+                dragStatus.current.x = event.clientX;
+                dragStatus.current.y = event.clientY;
+              }}
+              onMouseUp={(event) => {
+                if (
+                  Math.abs(dragStatus.current.x - event.clientX) +
+                    Math.abs(dragStatus.current.y - event.clientY) <
+                  15
+                ) {
+                  toggle();
+                }
+              }}
+            >
+              {getComponentToRender(message)}
+            </div>
+          ))}
+        </Slider>
       </div>
       <div className="rw-tooltip-decoration" />
     </div>
@@ -75,7 +113,7 @@ const Launcher = ({
         <div className="rw-unread-count-pastille">{unreadCount}</div>
       )}
       <img src={openLauncherImage || openLauncher} className="rw-open-launcher" alt="" />
-      {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
+      {showTooltip && lastMessage && lastMessage.get('sender') === 'response' && renderToolTip()}
     </div>
   );
 
@@ -105,11 +143,18 @@ Launcher.propTypes = {
   unreadCount: PropTypes.number,
   displayUnreadCount: PropTypes.bool,
   showTooltip: PropTypes.bool,
-  lastMessage: ImmutablePropTypes.map
+  lastMessages: PropTypes.arrayOf(ImmutablePropTypes.map)
 };
 
 const mapStateToProps = state => ({
-  lastMessage: (state.messages && state.messages.get(-1)) || new Map(),
+  lastMessages: (state.messages && (() => {
+    const messages = [];
+    for (let i = 1; i <= state.behavior.get('unreadCount'); i += 1) {
+      if (state.messages.get(-i) && state.messages.get(-i).get('sender') !== 'response') break;
+      messages.unshift(state.messages.get(-i));
+    }
+    return messages;
+  })()) || new Map(),
   unreadCount: state.behavior.get('unreadCount') || 0,
   showTooltip: state.metadata.get('showTooltip'),
   linkTarget: state.metadata.get('linkTarget')
