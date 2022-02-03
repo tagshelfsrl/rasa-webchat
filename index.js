@@ -1,6 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Widget, toggleChat, openChat, closeChat, showChat, hideChat, isOpen, isVisible, send, toggleInputDisabled } from './index_for_react_app';
+import {
+  Widget,
+  toggleChat,
+  openChat,
+  closeChat,
+  showChat,
+  hideChat,
+  isOpen,
+  isVisible,
+  send,
+  toggleInputDisabled
+} from './index_for_react_app';
 
 const plugin = {
   init: (args) => {
@@ -24,6 +35,7 @@ const plugin = {
         connectOn={args.connectOn}
         onSocketEvent={args.onSocketEvent}
         fullScreenMode={args.fullScreenMode}
+        fontFamily={args.fontFamily}
         badge={args.badge}
         params={args.params}
         embedded={args.embedded}
@@ -46,7 +58,8 @@ const plugin = {
         userBackgroundColor={args.userBackgroundColor}
         assistTextColor={args.assistTextColor}
         assistBackgoundColor={args.assistBackgoundColor}
-      />, document.querySelector(args.selector)
+      />,
+      document.querySelector(args.selector)
     );
   }
 };
@@ -64,4 +77,3 @@ export {
   send,
   toggleInputDisabled
 };
-
