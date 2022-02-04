@@ -11,6 +11,9 @@ const WidgetLayout = (props) => {
   if (props.fullScreenMode) {
     classes.push('rw-full-screen');
   }
+  if (props.fontFamily) {
+    classes.push('rw-font-family-' + props.fontFamily.toString().toLowerCase());
+  }
   const showCloseButton =
     props.showCloseButton !== undefined ? props.showCloseButton : !props.embedded;
   const isVisible = props.isChatVisible && !(props.hideWhenNotConnected && !props.connected);
@@ -32,6 +35,7 @@ const WidgetLayout = (props) => {
           isChatOpen={props.isChatOpen}
           toggleFullScreen={props.toggleFullScreen}
           fullScreenMode={props.fullScreenMode}
+          fontFamily={props.fontFamily}
           disabledInput={props.disabledInput}
           params={props.params}
           showFullScreenButton={props.showFullScreenButton}
@@ -59,7 +63,7 @@ const WidgetLayout = (props) => {
   ) : null;
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isChatVisible: state.behavior.get('isChatVisible'),
   isChatOpen: state.behavior.get('isChatOpen'),
   disabledInput: state.behavior.get('disabledInput'),
@@ -78,6 +82,7 @@ WidgetLayout.propTypes = {
   profileAvatar: PropTypes.string,
   showCloseButton: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
+  fontFamily: PropTypes.string,
   hideWhenNotConnected: PropTypes.bool,
   disabledInput: PropTypes.bool,
   fullScreenMode: PropTypes.bool,

@@ -8,7 +8,7 @@ import { Image, Message, Buttons } from 'messagesComponents';
 import { showTooltip as showTooltipAction } from 'actions';
 import openLauncher from 'assets/launcher_button.svg';
 import closeIcon from 'assets/clear-button-grey.svg';
-import close from 'assets/clear-button.svg';
+import minimize from 'assets/minimize-button-grey.svg';
 import Badge from './components/Badge';
 
 import './style.scss';
@@ -33,7 +33,6 @@ const Launcher = ({
   if (isChatOpen) className.push('rw-hide-sm');
   if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
-
   const getComponentToRender = (message) => {
     const ComponentToRender = (() => {
       switch (message.get('type')) {
@@ -50,24 +49,24 @@ const Launcher = ({
           return null;
       }
     })();
-    if (ComponentToRender) { return <ComponentToRender id={-1} params={{}} message={message} isLast />; }
+    if (ComponentToRender) {
+      return <ComponentToRender id={-1} params={{}} message={message} isLast />;
+    }
     toggle(); // open the chat if the tooltip do not know how to display the compoment
   };
 
-
   const renderToolTip = () => (
     <div className="rw-tooltip-body" style={{ backgroundColor: assistBackgoundColor }}>
-      <div className="rw-tooltip-close" >
-        <button onClick={(e) => { e.stopPropagation(); closeTooltip(); }}>
-          <img
-            src={closeIcon}
-            alt="close"
-          />
+      <div className="rw-tooltip-close">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            closeTooltip();
+          }}>
+          <img src={closeIcon} alt="close" />
         </button>
       </div>
-      <div className="rw-tooltip-response">
-        {getComponentToRender(lastMessage)}
-      </div>
+      <div className="rw-tooltip-response">{getComponentToRender(lastMessage)}</div>
       <div className="rw-tooltip-decoration" style={{ backgroundColor: assistBackgoundColor }} />
     </div>
   );
@@ -83,11 +82,15 @@ const Launcher = ({
   );
 
   return (
-    <button type="button" style={{ backgroundColor: mainColor }} className={className.join(' ')} onClick={toggle}>
+    <button
+      type="button"
+      style={{ backgroundColor: mainColor }}
+      className={className.join(' ')}
+      onClick={toggle}>
       <Badge badge={badge} />
       {isChatOpen ? (
         <img
-          src={closeImage || close}
+          src={closeImage || minimize}
           className={`rw-close-launcher ${closeImage ? '' : 'rw-default'}`}
           alt=""
         />
@@ -111,14 +114,14 @@ Launcher.propTypes = {
   lastMessage: ImmutablePropTypes.map
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   lastMessage: (state.messages && state.messages.get(-1)) || new Map(),
   unreadCount: state.behavior.get('unreadCount') || 0,
   showTooltip: state.metadata.get('showTooltip'),
   linkTarget: state.metadata.get('linkTarget')
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   closeTooltip: () => dispatch(showTooltipAction(false))
 });
 
