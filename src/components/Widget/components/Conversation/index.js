@@ -6,7 +6,7 @@ import Messages from './components/Messages';
 import Sender from './components/Sender';
 import './style.scss';
 
-const Conversation = props =>
+const Conversation = (props) => (
   <div className="rw-conversation-container">
     <Header
       title={props.title}
@@ -19,6 +19,7 @@ const Conversation = props =>
       connected={props.connected}
       connectingText={props.connectingText}
       closeImage={props.closeImage}
+      largeHeaderProfileImg={props.largeHeaderProfileImg}
       profileAvatar={props.profileAvatar}
     />
     <Messages
@@ -27,11 +28,9 @@ const Conversation = props =>
       customComponent={props.customComponent}
       showMessageDate={props.showMessageDate}
     />
-    <Sender
-      sendMessage={props.sendMessage}
-      disabledInput={props.disabledInput}
-    />
-  </div>;
+    <Sender sendMessage={props.sendMessage} disabledInput={props.disabledInput} />
+  </div>
+);
 
 Conversation.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -42,6 +41,7 @@ Conversation.propTypes = {
   fullScreenMode: PropTypes.bool,
   toggleChat: PropTypes.func,
   showCloseButton: PropTypes.bool,
+  largeHeaderProfileImg: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   disabledInput: PropTypes.bool,
   params: PropTypes.object,
