@@ -13,6 +13,8 @@ const Header = ({
   fullScreenMode,
   toggleFullScreen,
   toggleChat,
+  largeHeaderProfileImg,
+  outerProfileImgDesign,
   showCloseButton,
   showFullScreenButton,
   connected,
@@ -23,25 +25,35 @@ const Header = ({
   const { mainColor } = useContext(ThemeContext);
   return (
     <div className="rw-header-and-loading">
-      <div style={{ backgroundColor: mainColor }}className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`}>
-        {
-          profileAvatar && (
-            <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
-          )
-        }
+      <div
+        style={{ backgroundColor: mainColor }}
+        className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`}>
+        {profileAvatar && (
+          <img
+            src={profileAvatar}
+            className={`${
+              largeHeaderProfileImg || outerProfileImgDesign
+                ? outerProfileImgDesign
+                  ? 'rw-avatar-large-outer'
+                  : 'rw-avatar-large'
+                : 'rw-avatar'
+            }`}
+            alt="chat avatar"
+          />
+        )}
         <div className="rw-header-buttons">
-          {
-            showFullScreenButton &&
+          {showFullScreenButton && (
             <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen}>
               <img
-                className={`rw-toggle-fullscreen ${fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'}`}
+                className={`rw-toggle-fullscreen ${
+                  fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'
+                }`}
                 src={fullScreenMode ? fullscreenExit : fullscreen}
                 alt="toggle fullscreen"
               />
             </button>
-          }
-          {
-            showCloseButton &&
+          )}
+          {showCloseButton && (
             <button className="rw-close-button" onClick={toggleChat}>
               <img
                 className={`rw-close ${closeImage ? '' : 'rw-default'}`}
@@ -49,18 +61,37 @@ const Header = ({
                 alt="close"
               />
             </button>
-          }
+          )}
         </div>
-        <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
-        {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
+
+        <h4
+          className={`rw-title ${
+            largeHeaderProfileImg || outerProfileImgDesign
+              ? outerProfileImgDesign
+                ? profileAvatar && 'rw-with-avatar-large-outer'
+                : profileAvatar && 'rw-with-avatar-large'
+              : profileAvatar && 'rw-with-avatar'
+          }`}>
+          {title}
+        </h4>
+
+        {subtitle && (
+          <span
+            className={`
+            ${
+              largeHeaderProfileImg || outerProfileImgDesign
+                ? outerProfileImgDesign
+                  ? profileAvatar && 'rw-with-avatar-large-outer'
+                  : profileAvatar && 'rw-with-avatar-large'
+                : profileAvatar && 'rw-with-avatar'
+            }`}>
+            {subtitle}
+          </span>
+        )}
       </div>
-      {
-        !connected &&
-        <span className="rw-loading">
-          {connectingText}
-        </span>
-      }
-    </div>);
+      {!connected && <span className="rw-loading">{connectingText}</span>}
+    </div>
+  );
 };
 
 Header.propTypes = {
@@ -71,6 +102,7 @@ Header.propTypes = {
   toggleChat: PropTypes.func,
   showCloseButton: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
+  largeHeaderProfileImg: PropTypes.bool,
   connected: PropTypes.bool,
   connectingText: PropTypes.string,
   closeImage: PropTypes.string,

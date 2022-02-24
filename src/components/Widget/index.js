@@ -559,6 +559,8 @@ class Widget extends Component {
         customData={this.props.customData}
         profileAvatar={this.props.profileAvatar}
         showCloseButton={this.props.showCloseButton}
+        largeHeaderProfileImg={this.props.largeHeaderProfileImg}
+        outerProfileImgDesign={this.props.outerProfileImgDesign}
         showFullScreenButton={this.props.showFullScreenButton}
         hideWhenNotConnected={this.props.hideWhenNotConnected}
         fullScreenMode={this.props.fullScreenMode}
@@ -598,6 +600,8 @@ Widget.propTypes = {
   initPayload: PropTypes.string,
   profileAvatar: PropTypes.string,
   showCloseButton: PropTypes.bool,
+  largeHeaderProfileImg: PropTypes.bool,
+  outerProfileImgDesign: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   hideWhenNotConnected: PropTypes.bool,
   connectOn: PropTypes.oneOf(['mount', 'open']),

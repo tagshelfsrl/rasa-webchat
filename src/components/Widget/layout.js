@@ -38,6 +38,8 @@ const WidgetLayout = (props) => {
           fontFamily={props.fontFamily}
           disabledInput={props.disabledInput}
           params={props.params}
+          largeHeaderProfileImg={props.largeHeaderProfileImg}
+          outerProfileImgDesign={props.outerProfileImgDesign}
           showFullScreenButton={props.showFullScreenButton}
           {...{ showCloseButton }}
           connected={props.connected}
@@ -81,6 +83,8 @@ WidgetLayout.propTypes = {
   isChatVisible: PropTypes.bool,
   profileAvatar: PropTypes.string,
   showCloseButton: PropTypes.bool,
+  largeHeaderProfileImg: PropTypes.bool,
+  outerProfileImgDesign: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   fontFamily: PropTypes.string,
   hideWhenNotConnected: PropTypes.bool,

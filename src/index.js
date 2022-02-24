@@ -115,6 +115,8 @@ const ConnectedWidget = forwardRef((props, ref) => {
           handleNewUserMessage={props.handleNewUserMessage}
           profileAvatar={props.profileAvatar}
           showCloseButton={props.showCloseButton}
+          largeHeaderProfileImg={props.largeHeaderProfileImg}
+          outerProfileImgDesign={props.outerProfileImgDesign}
           showFullScreenButton={props.showFullScreenButton}
           hideWhenNotConnected={props.hideWhenNotConnected}
           connectOn={props.connectOn}
@@ -158,6 +160,8 @@ ConnectedWidget.propTypes = {
   inputTextFieldHint: PropTypes.string,
   connectingText: PropTypes.string,
   showCloseButton: PropTypes.bool,
+  largeHeaderProfileImg: PropTypes.bool,
+  outerProfileImgDesign: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   hideWhenNotConnected: PropTypes.bool,
   connectOn: PropTypes.oneOf(['mount', 'open']),
@@ -215,6 +219,8 @@ ConnectedWidget.defaultProps = {
   },
   docViewer: false,
   showCloseButton: true,
+  largeHeaderProfileImg: false,
+  outerProfileImgDesign: false,
   showFullScreenButton: false,
   displayUnreadCount: false,
   showMessageDate: false,
