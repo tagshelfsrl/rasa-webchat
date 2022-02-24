@@ -36,6 +36,7 @@ const plugin = {
         onSocketEvent={args.onSocketEvent}
         fullScreenMode={args.fullScreenMode}
         fontFamily={args.fontFamily}
+        largeHeaderProfileImg={args.largeHeaderProfileImg}
         badge={args.badge}
         params={args.params}
         embedded={args.embedded}
