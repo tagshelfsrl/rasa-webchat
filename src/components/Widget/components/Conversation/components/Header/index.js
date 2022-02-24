@@ -76,10 +76,6 @@ const Header = ({
             {subtitle}
           </span>
         )}
-
-        {/* {subtitle && largeHeaderProfileImg && (
-          <span className={profileAvatar && 'rw-with-avatar-large'}>{subtitle}</span>
-        )} */}
       </div>
       {!connected && <span className="rw-loading">{connectingText}</span>}
     </div>
