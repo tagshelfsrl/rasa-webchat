@@ -27,6 +27,13 @@
       top: 12px;
       left: 14px;
     }
+    .#{$namespace}avatar-large-outer {
+      all: initial;
+      width: 95px;
+      position: absolute;
+      top: -40px;
+      left: 14px;
+    }
   }
 
   .#{$namespace}header.#{$namespace}with-subtitle {
@@ -51,6 +58,9 @@
       &.#{$namespace}with-avatar-large {
         left: 80px;
       }
+      &.#{$namespace}with-avatar-large-outer {
+        left: 115px;
+      }
     }
   }
 
@@ -67,6 +77,9 @@
     }
     &.#{$namespace}with-avatar-large {
       left: 80px;
+    }
+    &.#{$namespace}with-avatar-large-outer {
+      left: 115px;
     }
   }
 

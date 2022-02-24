@@ -14,6 +14,7 @@ const Header = ({
   toggleFullScreen,
   toggleChat,
   largeHeaderProfileImg,
+  outerProfileImgDesign,
   showCloseButton,
   showFullScreenButton,
   connected,
@@ -30,7 +31,13 @@ const Header = ({
         {profileAvatar && (
           <img
             src={profileAvatar}
-            className={`${largeHeaderProfileImg ? 'rw-avatar-large' : 'rw-avatar'}`}
+            className={`${
+              largeHeaderProfileImg || outerProfileImgDesign
+                ? outerProfileImgDesign
+                  ? 'rw-avatar-large-outer'
+                  : 'rw-avatar-large'
+                : 'rw-avatar'
+            }`}
             alt="chat avatar"
           />
         )}
@@ -59,8 +66,10 @@ const Header = ({
 
         <h4
           className={`rw-title ${
-            largeHeaderProfileImg
-              ? profileAvatar && 'rw-with-avatar-large'
+            largeHeaderProfileImg || outerProfileImgDesign
+              ? outerProfileImgDesign
+                ? profileAvatar && 'rw-with-avatar-large-outer'
+                : profileAvatar && 'rw-with-avatar-large'
               : profileAvatar && 'rw-with-avatar'
           }`}>
           {title}
@@ -68,9 +77,12 @@ const Header = ({
 
         {subtitle && (
           <span
-            className={`${
-              largeHeaderProfileImg
-                ? profileAvatar && 'rw-with-avatar-large'
+            className={`
+            ${
+              largeHeaderProfileImg || outerProfileImgDesign
+                ? outerProfileImgDesign
+                  ? profileAvatar && 'rw-with-avatar-large-outer'
+                  : profileAvatar && 'rw-with-avatar-large'
                 : profileAvatar && 'rw-with-avatar'
             }`}>
             {subtitle}

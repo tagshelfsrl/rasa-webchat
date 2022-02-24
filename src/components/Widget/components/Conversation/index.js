@@ -7,7 +7,12 @@ import Sender from './components/Sender';
 import './style.scss';
 
 const Conversation = (props) => (
-  <div className="rw-conversation-container">
+  <div
+    className={`${
+      props.outerProfileImgDesign
+        ? 'rw-conversation-container rw-conversation-container-out'
+        : 'rw-conversation-container'
+    }`}>
     <Header
       title={props.title}
       subtitle={props.subtitle}
@@ -20,6 +25,7 @@ const Conversation = (props) => (
       connectingText={props.connectingText}
       closeImage={props.closeImage}
       largeHeaderProfileImg={props.largeHeaderProfileImg}
+      outerProfileImgDesign={props.outerProfileImgDesign}
       profileAvatar={props.profileAvatar}
     />
     <Messages
@@ -42,6 +48,7 @@ Conversation.propTypes = {
   toggleChat: PropTypes.func,
   showCloseButton: PropTypes.bool,
   largeHeaderProfileImg: PropTypes.bool,
+  outerProfileImgDesign: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   disabledInput: PropTypes.bool,
   params: PropTypes.object,

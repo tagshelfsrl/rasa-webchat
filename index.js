@@ -37,6 +37,7 @@ const plugin = {
         fullScreenMode={args.fullScreenMode}
         fontFamily={args.fontFamily}
         largeHeaderProfileImg={args.largeHeaderProfileImg}
+        outerProfileImgDesign={args.outerProfileImgDesign}
         badge={args.badge}
         params={args.params}
         embedded={args.embedded}

@@ -39,6 +39,7 @@ const WidgetLayout = (props) => {
           disabledInput={props.disabledInput}
           params={props.params}
           largeHeaderProfileImg={props.largeHeaderProfileImg}
+          outerProfileImgDesign={props.outerProfileImgDesign}
           showFullScreenButton={props.showFullScreenButton}
           {...{ showCloseButton }}
           connected={props.connected}
@@ -83,6 +84,7 @@ WidgetLayout.propTypes = {
   profileAvatar: PropTypes.string,
   showCloseButton: PropTypes.bool,
   largeHeaderProfileImg: PropTypes.bool,
+  outerProfileImgDesign: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   fontFamily: PropTypes.string,
   hideWhenNotConnected: PropTypes.bool,
