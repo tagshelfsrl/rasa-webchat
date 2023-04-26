@@ -12,7 +12,7 @@
         // embedded: true,
         selector: '#webchat',
         initPayload: '/greet',
-        socketUrl: 'http://localhost:3000',
+        socketUrl: 'http://prousuario.johnny5.dev',
         tooltipPayload: '/tooltip_registered_accounts',
         tooltipDelay: 40000,
         customData: {
@@ -38,7 +38,8 @@
         //   }
         // }`,
         onSocketEvent: {
-          bot_uttered: () => console.log('bot uttered')
+          bot_uttered: () => console.log('bot uttered'),
+          disconnect: () => console.log('bot disconnected')
         },
         showCloseButton: true,
         fullScreenMode: true,

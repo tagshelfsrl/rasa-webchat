@@ -38,6 +38,7 @@ import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
 import { isVideo, isImage, isButtons, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
+import { dropMessages } from '../../store/actions';
 
 class Widget extends Component {
   constructor(props) {
@@ -354,7 +355,7 @@ class Widget extends Component {
       });
 
       // When session_confirm is received from the server:
-      socket.on('session_confirm', (sessionObject) => {
+      socket.on('session_confirm', async (sessionObject) => {
         const remoteId =
           sessionObject && sessionObject.session_id ? sessionObject.session_id : sessionObject;
 
@@ -391,6 +392,52 @@ class Widget extends Component {
               dispatch(emitUserMessage(message));
             }
           }
+
+          try {
+            const {
+              result: { id }
+            } = await this.fetchClientBySession(localId);
+
+            const { result } = await this.fetchMessagesByClientId(id);
+            dispatch(dropMessages());
+            result.reverse();
+
+            console.log(result);
+            for (let msg of result) {
+              if (msg.sender === 'client') {
+                dispatch(addUserMessage(msg.content));
+                // dispatch(emitUserMessage(message.content));
+              }
+              if (msg.sender === 'bot' || msg.sender === 'agent') {
+                let payload = {
+                  text: msg.content
+                };
+
+                if (msg.metadata?.buttons) {
+                  payload['quick_replies'] = msg.metadata?.buttons;
+                }
+                this.handleBotUtterance(payload);
+              }
+            }
+
+            // result.forEach((message) => {
+            //   if (message.sender === 'client') {
+            //     dispatch(addUserMessage(message.content));
+            //     // dispatch(emitUserMessage(message.content));
+            //   }
+            //   if (message.sender === 'bot' || message.sender === 'agent') {
+            //     let payload = {
+            //       text: message.content
+            //     };
+
+            //     if (message.metadata?.buttons) {
+            //       payload['quick_replies'] = message.metadata?.buttons;
+            //     }
+
+            //     this.handleBotUtterance(payload);
+            //   }
+            // });
+          } catch (error) {}
         }
         if (connectOn === 'mount' && tooltipPayload) {
           this.tooltipTimeout = setTimeout(() => {
@@ -412,6 +459,26 @@ class Widget extends Component {
       dispatch(showChat());
       dispatch(openChat());
     }
+  }
+
+  async fetchClientBySession(session_id) {
+    console.log(session_id);
+    const response = await fetch(
+      `https://prousuario.johnny5.dev/api/clients?senderId=${session_id}`
+    );
+    const client = await response.json();
+    console.log(client);
+    return client;
+  }
+
+  async fetchMessagesByClientId(client_id) {
+    console.log('client: ', client_id);
+    const response = await fetch(
+      `https://prousuario.johnny5.dev/api/clients/${client_id}/messages?limit=15`
+    );
+    const messages = await response.json();
+    console.log(messages);
+    return messages;
   }
 
   // TODO: Need to erase redux store on load if localStorage
