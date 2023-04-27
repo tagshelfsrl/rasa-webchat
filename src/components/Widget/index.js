@@ -399,14 +399,17 @@ class Widget extends Component {
             } = await this.fetchClientBySession(localId);
 
             const { result } = await this.fetchMessagesByClientId(id);
+
+            // Let's drop all the messages that we had
             dispatch(dropMessages());
+
+            // Reverse the messages to be ordered from latest to earliest message
             result.reverse();
 
-            console.log(result);
+            // Let's send a message according to the sender sent msg
             for (let msg of result) {
               if (msg.sender === 'client') {
                 dispatch(addUserMessage(msg.content));
-                // dispatch(emitUserMessage(message.content));
               }
               if (msg.sender === 'bot' || msg.sender === 'agent') {
                 let payload = {
@@ -416,28 +419,12 @@ class Widget extends Component {
                 if (msg.metadata?.buttons) {
                   payload['quick_replies'] = msg.metadata?.buttons;
                 }
-                this.handleBotUtterance(payload);
+                this.dispatchMessage(payload);
               }
             }
-
-            // result.forEach((message) => {
-            //   if (message.sender === 'client') {
-            //     dispatch(addUserMessage(message.content));
-            //     // dispatch(emitUserMessage(message.content));
-            //   }
-            //   if (message.sender === 'bot' || message.sender === 'agent') {
-            //     let payload = {
-            //       text: message.content
-            //     };
-
-            //     if (message.metadata?.buttons) {
-            //       payload['quick_replies'] = message.metadata?.buttons;
-            //     }
-
-            //     this.handleBotUtterance(payload);
-            //   }
-            // });
-          } catch (error) {}
+          } catch (error) {
+            console.log(error);
+          }
         }
         if (connectOn === 'mount' && tooltipPayload) {
           this.tooltipTimeout = setTimeout(() => {
