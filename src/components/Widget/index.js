@@ -359,6 +359,8 @@ class Widget extends Component {
         const remoteId =
           sessionObject && sessionObject.session_id ? sessionObject.session_id : sessionObject;
 
+        const messages = sessionObject.messages;
+
         // eslint-disable-next-line no-console
         console.log(`session_confirm:${socket.socket.id} session_id:${remoteId}`);
         // Store the initial state to both the redux store and the storage, set connected to true
@@ -393,21 +395,15 @@ class Widget extends Component {
             }
           }
 
-          try {
-            const {
-              result: { id }
-            } = await this.fetchClientBySession(localId);
+          // Let's drop all the messages that we had
+          dispatch(dropMessages());
 
-            const { result } = await this.fetchMessagesByClientId(id);
+          // Reverse the messages to be ordered from latest to earliest message
+          messages.reverse();
 
-            // Let's drop all the messages that we had
-            dispatch(dropMessages());
-
-            // Reverse the messages to be ordered from latest to earliest message
-            result.reverse();
-
-            // Let's send a message according to the sender sent msg
-            for (let msg of result) {
+          // Let's send a message according to the sender sent msg
+          if (messages.length > 0) {
+            for (let msg of messages) {
               if (msg.sender === 'client') {
                 dispatch(addUserMessage(msg.content));
               }
@@ -422,10 +418,9 @@ class Widget extends Component {
                 this.dispatchMessage(payload);
               }
             }
-          } catch (error) {
-            console.log(error);
           }
         }
+
         if (connectOn === 'mount' && tooltipPayload) {
           this.tooltipTimeout = setTimeout(() => {
             this.trySendTooltipPayload();
@@ -446,26 +441,6 @@ class Widget extends Component {
       dispatch(showChat());
       dispatch(openChat());
     }
-  }
-
-  async fetchClientBySession(session_id) {
-    console.log(session_id);
-    const response = await fetch(
-      `https://prousuario.johnny5.dev/api/clients?senderId=${session_id}`
-    );
-    const client = await response.json();
-    console.log(client);
-    return client;
-  }
-
-  async fetchMessagesByClientId(client_id) {
-    console.log('client: ', client_id);
-    const response = await fetch(
-      `https://prousuario.johnny5.dev/api/clients/${client_id}/messages?limit=15`
-    );
-    const messages = await response.json();
-    console.log(messages);
-    return messages;
   }
 
   // TODO: Need to erase redux store on load if localStorage
