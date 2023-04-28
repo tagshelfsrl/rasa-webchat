@@ -355,7 +355,7 @@ class Widget extends Component {
       });
 
       // When session_confirm is received from the server:
-      socket.on('session_confirm', async (sessionObject) => {
+      socket.on('session_confirm', (sessionObject) => {
         const remoteId =
           sessionObject && sessionObject.session_id ? sessionObject.session_id : sessionObject;
 
@@ -398,11 +398,11 @@ class Widget extends Component {
           // Let's drop all the messages that we had
           dispatch(dropMessages());
 
-          // Reverse the messages to be ordered from latest to earliest message
-          messages.reverse();
-
           // Let's send a message according to the sender sent msg
-          if (messages.length > 0) {
+          if (messages && messages.length > 0) {
+            // Reverse the messages to be ordered from latest to earliest message
+            messages.reverse();
+
             for (let msg of messages) {
               if (msg.sender === 'client') {
                 dispatch(addUserMessage(msg.content));
