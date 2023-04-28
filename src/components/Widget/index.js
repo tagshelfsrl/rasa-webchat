@@ -38,6 +38,7 @@ import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
 import { isVideo, isImage, isButtons, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
+import { dropMessages } from '../../store/actions';
 
 class Widget extends Component {
   constructor(props) {
@@ -358,6 +359,8 @@ class Widget extends Component {
         const remoteId =
           sessionObject && sessionObject.session_id ? sessionObject.session_id : sessionObject;
 
+        const messages = sessionObject.messages;
+
         // eslint-disable-next-line no-console
         console.log(`session_confirm:${socket.socket.id} session_id:${remoteId}`);
         // Store the initial state to both the redux store and the storage, set connected to true
@@ -391,7 +394,33 @@ class Widget extends Component {
               dispatch(emitUserMessage(message));
             }
           }
+
+          // Let's drop all the messages that we had
+          dispatch(dropMessages());
+
+          // Let's send a message according to the sender sent msg
+          if (messages && messages.length > 0) {
+            // Reverse the messages to be ordered from latest to earliest message
+            messages.reverse();
+
+            for (let msg of messages) {
+              if (msg.sender === 'client') {
+                dispatch(addUserMessage(msg.content));
+              }
+              if (msg.sender === 'bot' || msg.sender === 'agent') {
+                let payload = {
+                  text: msg.content
+                };
+
+                if (msg.metadata?.buttons) {
+                  payload['quick_replies'] = msg.metadata?.buttons;
+                }
+                this.dispatchMessage(payload);
+              }
+            }
+          }
         }
+
         if (connectOn === 'mount' && tooltipPayload) {
           this.tooltipTimeout = setTimeout(() => {
             this.trySendTooltipPayload();
