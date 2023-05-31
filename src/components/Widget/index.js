@@ -398,7 +398,25 @@ class Widget extends Component {
           // Let's drop all the messages that we had
           dispatch(dropMessages());
 
-          // Let's send a message according to the sender sent msg
+          // Retrieve the stored item from sessionStorage
+          const storedSession = getLocalSession(storage, SESSION_NAME);
+
+          if (storedSession) {
+            // Parse the stored item into an object
+            const object = JSON.parse(storedSession);
+
+            // Clear the conversation
+            object.conversation = [];
+
+            if (sendInitPayload) {
+              this.trySendInitPayload();
+            }
+
+            // Update the empty conversation in the storage
+            storeLocalSession(storage, SESSION_NAME, remoteId);
+          }
+
+          // Let's send a message according to the sender sent msg and the action will store each message to the storage
           if (messages && messages.length > 0) {
             // Reverse the messages to be ordered from latest to earliest message
             messages.reverse();
