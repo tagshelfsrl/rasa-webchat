@@ -399,19 +399,24 @@ class Widget extends Component {
           dispatch(dropMessages());
 
           // Retrieve the stored item from sessionStorage
-          const storedSession = sessionStorage.getItem(SESSION_NAME);
+          const storedSession = getLocalSession(storage, SESSION_NAME);
 
-          // Parse the stored item into an object
-          const object = JSON.parse(storedSession);
+          if (storedSession) {
+            // Parse the stored item into an object
+            const object = JSON.parse(storedSession);
 
-          // Clear the conversation
-          object.conversation = [];
+            // Clear the conversation
+            object.conversation = [];
 
-          if (sendInitPayload) {
-            this.trySendInitPayload();
+            if (sendInitPayload) {
+              this.trySendInitPayload();
+            }
+
+            // Update the empty conversation in the storage
+            storeLocalSession(storage, SESSION_NAME, remoteId);
           }
 
-          // Let's send a message according to the sender sent msg
+          // Let's send a message according to the sender sent msg and the action will store each message to the storage
           if (messages && messages.length > 0) {
             // Reverse the messages to be ordered from latest to earliest message
             messages.reverse();
@@ -432,8 +437,6 @@ class Widget extends Component {
               }
             }
           }
-          // Update the stored item in sessionStorage
-          sessionStorage.setItem(SESSION_NAME, JSON.stringify(object));
         }
 
         if (connectOn === 'mount' && tooltipPayload) {
