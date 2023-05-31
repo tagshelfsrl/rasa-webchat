@@ -402,11 +402,8 @@ class Widget extends Component {
           const storedSession = getLocalSession(storage, SESSION_NAME);
 
           if (storedSession) {
-            // Parse the stored item into an object
-            const object = JSON.parse(storedSession);
-
             // Clear the conversation
-            object.conversation = [];
+            storedSession.conversation = [];
 
             if (sendInitPayload) {
               this.trySendInitPayload();
