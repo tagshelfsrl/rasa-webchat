@@ -1,8 +1,10 @@
 import io from 'socket.io-client';
 
 export default function(socketUrl, customData, path) {
-  const options = path ? { path } : {};
-  options.transports = ['websocket'];
+  const options = {
+    path,
+    transports: ['polling', 'websocket']
+  };
 
   const socket = io(socketUrl, options);
 
