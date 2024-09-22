@@ -335,7 +335,8 @@ class Widget extends Component {
       initialized,
       connectOn,
       tooltipPayload,
-      tooltipDelay
+      tooltipDelay,
+      customData
     } = this.props;
     if (!socket.isInitialized()) {
       socket.createSocket();
@@ -351,7 +352,7 @@ class Widget extends Component {
       // Request a session from server
       socket.on('connect', () => {
         const localId = this.getSessionId();
-        socket.emit('session_request', { session_id: localId });
+        socket.emit('session_request', { session_id: localId, custom_data: customData });
       });
 
       // When session_confirm is received from the server:
