@@ -372,7 +372,8 @@ class Widget extends Component {
         start a new session.
         */
         const localId = this.getSessionId();
-        if (localId !== remoteId) {
+        const { userId } = customData || {};
+        if (!userId && (localId !== remoteId)) {
           // storage.clear();
           // Store the received session_id to storage
 
